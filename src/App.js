@@ -1,22 +1,17 @@
-// App.js
 import React from 'react';
 import { mean, median, mode } from './Utils';
 
-// Sample dataset (replace this with your dataset)
 const data = [
     { Alcohol: 1, Flavanoids: 5, Ash: 2, Hue: 3, Magnesium: 4 },
-    { Alcohol: 15, Flavanoids: 55, Ash: 52, Hue: 53, Magnesium: 45 },
-    // ... add more data points
+    { Alcohol: 2, Flavanoids: 12, Ash: 3, Hue: 5, Magnesium: 7 },
 ];
 
 function calculateStats(attribute) {
-    // Group by Alcohol class
     const grouped = data.reduce((acc, curr) => {
         (acc[curr.Alcohol] = acc[curr.Alcohol] || []).push(curr);
         return acc;
     }, {});
 
-    // Compute stats for each class
     const stats = {};
     for (let cls in grouped) {
         const values = grouped[cls].map(item => item[attribute]);
@@ -32,48 +27,45 @@ function calculateStats(attribute) {
 
 const FlavanoidsStats = calculateStats('Flavanoids');
 
-// Add Gamma to each data point
 data.forEach(point => point.Gamma = (point.Ash * point.Hue) / point.Magnesium);
 
 const GammaStats = calculateStats('Gamma');
 
-function App() {
+function StatsTable({ title, stats }) {
     return (
-        <div className="App">
+        <div>
+            <h2>{title} Stats</h2>
             <table>
                 <thead>
                     <tr>
                         <th>Measure</th>
-                        {Object.keys(FlavanoidsStats).map(cls => <th key={cls}>Class {cls}</th>)}
+                        {Object.keys(stats).map(cls => <th key={cls}>Class {cls}</th>)}
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Flavanoids Mean</td>
-                        {Object.values(FlavanoidsStats).map((stat, idx) => <td key={idx}>{stat.mean}</td>)}
+                        <td>Mean</td>
+                        {Object.values(stats).map((stat, idx) => <td key={idx}>{stat.mean}</td>)}
                     </tr>
                     <tr>
-                        <td>Flavanoids Median</td>
-                        {Object.values(FlavanoidsStats).map((stat, idx) => <td key={idx}>{stat.median}</td>)}
+                        <td>Median</td>
+                        {Object.values(stats).map((stat, idx) => <td key={idx}>{stat.median}</td>)}
                     </tr>
                     <tr>
-                        <td>Flavanoids Mode</td>
-                        {Object.values(FlavanoidsStats).map((stat, idx) => <td key={idx}>{stat.mode}</td>)}
-                    </tr>
-                    <tr>
-                        <td>Gamma Mean</td>
-                        {Object.values(GammaStats).map((stat, idx) => <td key={idx}>{stat.mean}</td>)}
-                    </tr>
-                    <tr>
-                        <td>Gamma Median</td>
-                        {Object.values(GammaStats).map((stat, idx) => <td key={idx}>{stat.median}</td>)}
-                    </tr>
-                    <tr>
-                        <td>Gamma Mode</td>
-                        {Object.values(GammaStats).map((stat, idx) => <td key={idx}>{stat.mode}</td>)}
+                        <td>Mode</td>
+                        {Object.values(stats).map((stat, idx) => <td key={idx}>{stat.mode}</td>)}
                     </tr>
                 </tbody>
             </table>
+        </div>
+    );
+}
+
+function App() {
+    return (
+        <div className="App">
+            <StatsTable title="Flavanoids" stats={FlavanoidsStats} />
+            <StatsTable title="Gamma" stats={GammaStats} />
         </div>
     );
 }

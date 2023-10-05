@@ -1,4 +1,3 @@
-// utils.js
 function mean(arr) {
     const sum = arr.reduce((acc, val) => acc + val, 0);
     return +(sum / arr.length).toFixed(3);
